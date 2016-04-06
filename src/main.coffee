@@ -6,7 +6,7 @@ module.exports = (robot) ->
     res.writeHead 204, { 'Content-Length': 0 }
     res.end()
 
-    room = if query.room then query.room else 'sms'
+    room = 'sms'
 
     data = req.body
 
@@ -26,7 +26,7 @@ module.exports = (robot) ->
         room: room
 
     content =
-      text: sender
+      text: sms_text
       fallback: sms_text
       color: green
       mrkdwn_in: ["text", "title", "fallback", "fields"]
@@ -34,6 +34,10 @@ module.exports = (robot) ->
         {
           title: 'Part number'
           value: sms_number
+        },
+        {
+          title: 'Sender',
+          value: sender
         }
       ]
 
