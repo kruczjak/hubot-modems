@@ -43,3 +43,7 @@ module.exports = (robot) ->
 
     msg.content = content
     robot.emit 'slack-attachment', msg
+
+  robot.respond /modems/i, (msg) ->
+    output = execSync('ps -axfo command | grep \'^gammu-smsd -c\'');
+    msg.send "Hi :) These modems processes are working now:\n #{output}"
