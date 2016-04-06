@@ -3,17 +3,39 @@ querystring = require('querystring')
 
 module.exports = (robot) ->
   robot.router.post '/hubot/sms', (req, res) ->
-    query = querystring.parse(url.parse(req.url).query)
-    console.log(query)
+    res.writeHead 204, { 'Content-Length': 0 }
+    res.end()
 
     room = if query.room then query.room else 'sms'
-    
-    if robot.adapterName is 'slack'
-      green = '#48CE78'
-      blue = '#286EA6'
-      red = '#E5283E'
 
-      msg =
-        message:
-          reply_to: room
-          room: room
+    data = req.body
+
+    console.log(data)
+
+    sender = data.sender
+    sms_text = data.sms_text
+    sms_number = data.sms_number
+
+    msg = ''
+
+    green = '#48CE78'
+
+    msg =
+      message:
+        reply_to: room
+        room: room
+
+    content =
+      text: sender
+      fallback: sms_text
+      color: green
+      mrkdwn_in: ["text", "title", "fallback", "fields"]
+      fields: [
+        {
+          title: 'Part number'
+          value: sms_number
+        }
+      ]
+
+    msg.content = content
+    robot.emit 'slack-attachment', msg
