@@ -47,3 +47,6 @@ module.exports = (robot) ->
   robot.respond /modems/i, (msg) ->
     output = require('child_process').execSync('ps -axfo command | grep \'^gammu-smsd -c\'');
     msg.send "Hi :) These modems processes are working now:\n #{output}"
+
+  robot.respond /beep/i, (msg) ->
+    require('child_process').exec('/home/hubot/beep.sh')
