@@ -60,6 +60,8 @@ module.exports = (robot) ->
           reply(i)
 
     reply = (object) ->
+      parts = object.number_of_parts ? ", part: #{object.number_of_parts} (#{object.number_of_parts_udh})" : ''
+
       msg =
         message:
           reply_to: ROOM
@@ -73,7 +75,7 @@ module.exports = (robot) ->
         fields: [
           {
             title: 'Details'
-            value: "To: #{object.RecipientID}, part: #{object.number_of_parts} (#{object.number_of_parts_udh}), from: #{object.SenderNumber}, at: #{object.ReceivingDateTime}"
+            value: "To: *#{object.RecipientID}*#{parts}, from: *#{object.SenderNumber}*, at: *#{object.ReceivingDateTime}*"
           }
         ]
 
