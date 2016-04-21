@@ -60,7 +60,7 @@ module.exports = (robot) ->
           reply(i)
 
     reply = (object) ->
-      parts = object.number_of_parts ? ", part: #{object.number_of_parts} (#{object.number_of_parts_udh})" : ''
+      parts = if !!object.number_of_parts then ", part: #{object.number_of_parts} (#{object.number_of_parts_udh})" else ''
 
       msg =
         message:
