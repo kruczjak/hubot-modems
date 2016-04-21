@@ -45,9 +45,9 @@ module.exports = (robot) ->
     robot.brain.set('modemsLastSync', moment().format())
 
     if lastSyncTime != null
-      time = "?start_date=#{lastSyncTime}"
+      time = "?start_time=#{lastSyncTime}"
     else
-      time = moment().startOf('day').format()
+      time = "?start_time=#{moment().startOf('day').format()}"
 
     console.log(lastSyncTime)
 
@@ -56,6 +56,8 @@ module.exports = (robot) ->
         console.log(err)
       else
         console.log(json)
+        for i in json
+          reply(i)
 
     reply = (object) ->
       msg =
@@ -64,22 +66,14 @@ module.exports = (robot) ->
           room: ROOM
 
       content =
-        text: sms_text
-        fallback: sms_text
-        color: green
+        text: object.TextDecoded
+        fallback: object.TextDecoded
+        color: COLORS[object.RecipientID]
         mrkdwn_in: ["text", "title", "fallback", "fields"]
         fields: [
           {
-            title: 'Number of parts'
-            value: sms_number
-          },
-          {
-            title: 'Sender',
-            value: sender
-          },
-          {
-            title: "Received by",
-            value: receiver
+            title: 'Details'
+            value: "To: #{object.RecipientID}, part: #{object.number_of_parts} (#{object.number_of_parts_udh}), from: #{object.SenderNumber}, at: #{object.ReceivingDateTime}"
           }
         ]
 
