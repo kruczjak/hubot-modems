@@ -10,10 +10,7 @@ moment = require('moment')
 http = require('http');
 
 DEFAULT_PATH = '/mt_messages/all'
-HTTP_OPTIONS = {
-  host: 'localhost',
-  port: ':9901'
-}
+HTTP_HOST = 'http://127.0.0.1:9901'
 
 COLORS = {
   '4740769126': '#00A000',
@@ -26,7 +23,7 @@ ROOM = 'sms'
 
 module.exports = (robot) ->
   request = (path, cb) ->
-    robot.http(HTTP_OPTIONS.host + HTTP_OPTIONS.port + path)
+    robot.http(HTTP_HOST + path)
     .header('PASSWORD', process.env.HUBOT_MODEMS_PASSWORD)
     .get() (err, res, body) ->
       if err
@@ -52,9 +49,11 @@ module.exports = (robot) ->
     else
       time = moment().startOf('day').format()
 
+    console.log(lastSyncTime)
+
     request DEFAULT_PATH + time, (err, json) ->
       if err
-        #error
+        console.log(err)
       else
         console.log(json)
 
