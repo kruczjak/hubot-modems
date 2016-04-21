@@ -47,11 +47,10 @@ module.exports = (robot) ->
     lastSyncTime = robot.brain.get('modemsLastSync')
     robot.brain.set('modemsLastSync', moment().format())
 
-    if (lastSyncTime != null) {
+    if lastSyncTime != null
       time = "?start_date=#{lastSyncTime}"
-    } else {
+    else
       time = moment().startOf('day').format()
-    }
 
     request DEFAULT_PATH + time, (err, json) ->
       if err
