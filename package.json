@@ -1,6 +1,6 @@
 {
   "name": "hubot-modems",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "./src/main",
   "scripts": {
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/kruczjak/hubot-modems#readme",
   "dependencies": {
-    "coffee-script": "^1.10.0"
+    "coffee-script": "^1.10.0",
+    "moment": "^2.13.0"
   }
 }

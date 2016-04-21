@@ -1,48 +1,92 @@
+# Description:
+#   Modems interaction.
+#
+# Commands:
+#   hubot modems - Displays information about modems.
+
 url = require('url')
 querystring = require('querystring')
+moment = require('moment')
+http = require('http');
+
+DEFAULT_PATH = '/mt_messages/all'
+HTTP_OPTIONS = {
+  host: 'localhost',
+  port: ':9901'
+}
+
+COLORS = {
+  '4740769126': '#00A000',
+  '4745963147': '#00b3ee',
+  '4748229076': '#0000fe',
+  '46738197918': '#7a43b6'
+}
+
+ROOM = 'sms'
 
 module.exports = (robot) ->
+  request = (path, cb) ->
+    robot.http(HTTP_OPTIONS.host + HTTP_OPTIONS.port + path)
+    .header('PASSWORD', process.env.HUBOT_MODEMS_PASSWORD)
+    .get() (err, res, body) ->
+      if err
+        cb(err)
+      else
+        json = JSON.parse(body)
+        if json.error
+          cb(new Error(body))
+        else
+          cb(null, json)
+
+
   robot.router.post '/hubot/sms', (req, res) ->
     res.writeHead 204, { 'Content-Length': 0 }
     res.end()
 
-    room = 'sms'
 
-    data = req.body
+    lastSyncTime = robot.brain.get('modemsLastSync')
+    robot.brain.set('modemsLastSync', moment().format())
 
-    console.log(data)
+    if (lastSyncTime != null) {
+      time = "?start_date=#{lastSyncTime}"
+    } else {
+      time = moment().startOf('day').format()
+    }
 
-    sender = data.sender
-    sms_text = data.sms_text
-    sms_number = data.sms_number
+    request DEFAULT_PATH + time, (err, json) ->
+      if err
+        #error
+      else
+        console.log(json)
 
-    msg = ''
+    reply = (object) ->
+      msg =
+        message:
+          reply_to: ROOM
+          room: ROOM
 
-    green = '#48CE78'
+      content =
+        text: sms_text
+        fallback: sms_text
+        color: green
+        mrkdwn_in: ["text", "title", "fallback", "fields"]
+        fields: [
+          {
+            title: 'Number of parts'
+            value: sms_number
+          },
+          {
+            title: 'Sender',
+            value: sender
+          },
+          {
+            title: "Received by",
+            value: receiver
+          }
+        ]
 
-    msg =
-      message:
-        reply_to: room
-        room: room
-
-    content =
-      text: sms_text
-      fallback: sms_text
-      color: green
-      mrkdwn_in: ["text", "title", "fallback", "fields"]
-      fields: [
-        {
-          title: 'Part number'
-          value: sms_number
-        },
-        {
-          title: 'Sender',
-          value: sender
-        }
-      ]
-
-    msg.content = content
-    robot.emit 'slack-attachment', msg
+      msg.content = content
+      robot.emit 'slack-attachment', msg
 
   robot.respond /modems/i, (msg) ->
     output = require('child_process').execSync('ps -axfo command | grep \'^gammu-smsd -c\'');
