@@ -89,14 +89,18 @@ module.exports = (robot) ->
   robot.respond /beep/i, (msg) ->
     require('child_process').exec('/home/hubot/beep.sh')
 
-  robot.respond /^(\d+)\/(\d+)$/i, (msg) ->
+  robot.hear /^(\d+)\/(\d+)$/i, (msg) ->
+    return if msg.envelope.room != 'rylisy'
+
     deal = ':torstein-deal: '
     no_deal = ':torstein: '
 
     console.log(msg)
     console.log(msg.match)
 
-    first = parseInt(msg.match[0])
-    second = parseInt(msg.match[1])
+    first = parseInt(msg.match[1])
+    second = parseInt(msg.match[2])
 
-    msg.send "#{deal*first}#{no_deal*second}"
+    no_deal_number = second - first
+
+    msg.send "#{Array(first).join(deal)}#{Array(no_deal_number).join(no_deal)}"
