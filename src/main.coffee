@@ -88,3 +88,15 @@ module.exports = (robot) ->
 
   robot.respond /beep/i, (msg) ->
     require('child_process').exec('/home/hubot/beep.sh')
+
+  robot.respond /^(\d+)\/(\d+)$/i, (msg) ->
+    deal = ':torstein-deal: '
+    no_deal = ':torstein: '
+
+    console.log(msg)
+    console.log(msg.match)
+
+    first = parseInt(msg.match[0])
+    second = parseInt(msg.match[1])
+
+    msg.send "#{deal*first}#{no_deal*second}"
