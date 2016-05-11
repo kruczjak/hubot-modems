@@ -95,12 +95,9 @@ module.exports = (robot) ->
     deal = ':torstein-deal: '
     no_deal = ':torstein: '
 
-    console.log(msg)
-    console.log(msg.match)
-
     first = parseInt(msg.match[1])
     second = parseInt(msg.match[2])
 
     no_deal_number = second - first
 
-    msg.send "#{Array(first).join(deal)}#{Array(no_deal_number).join(no_deal)}"
+    msg.send "#{Array(first + 1).join(deal)}#{Array(no_deal_number + 1).join(no_deal)}"
