@@ -10,7 +10,7 @@ moment = require('moment')
 http = require('http');
 
 DEFAULT_PATH = '/mt_messages/all'
-HTTP_HOST = 'http://127.0.0.1:9901'
+HTTP_HOST = 'http://127.0.0.1:9902'
 
 COLORS = {
   '4740769126': '#00A000',
