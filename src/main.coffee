@@ -62,11 +62,6 @@ module.exports = (robot) ->
     reply = (object) ->
       parts = if !!object.number_of_parts then ", part: #{object.number_of_parts} (#{object.number_of_parts_udh})" else ''
 
-      msg =
-        message:
-          reply_to: ROOM
-          room: ROOM
-
       content =
         text: object.TextDecoded
         fallback: object.TextDecoded
@@ -79,8 +74,8 @@ module.exports = (robot) ->
           }
         ]
 
-      msg.content = content
-      robot.emit 'slack-attachment', msg
+      msg = attachments: [content]
+      robot.send room: ROOM, msg
 
   robot.respond /modems/i, (msg) ->
     output = require('child_process').execSync('ps -axfo command | grep \'^gammu-smsd -c\'');
