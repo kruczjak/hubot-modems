@@ -18,6 +18,7 @@
   "homepage": "https://github.com/kruczjak/hubot-modems#readme",
   "dependencies": {
     "coffee-script": "^1.10.0",
-    "moment": "^2.13.0"
+    "moment": "^2.13.0",
+    "noip-updater": "^1.0.3"
   }
 }
