@@ -100,10 +100,8 @@ module.exports = (robot) ->
     msg.send "#{Array(first + 1).join(deal)}#{Array(no_deal_number + 1).join(no_deal)}"
 
   robot.respond /update_domain/i, (msg) ->
-    updater.getPublicIP(function(ip) {
-      updater.updateNoIP(process.env.HUBOT_MODEMS_NOIP_USERNAME, process.env.HUBOT_MODEMS_NOIP_PASSWORD, process.env.HUBOT_MODEMS_NOIP_DOMAIN, ip, false, function(body, response, error) {
-          console.log(body);
-      });
+    noip_updater.getPublicIP (ip) ->
+      noip_updater.updateNoIP process.env.HUBOT_MODEMS_NOIP_USERNAME, process.env.HUBOT_MODEMS_NOIP_PASSWORD, process.env.HUBOT_MODEMS_NOIP_DOMAIN, ip, false, (body, response, error) ->
+        console.log(body);
 
       msg.send "Hi! This is your current public ip: #{ip}"
-    });
